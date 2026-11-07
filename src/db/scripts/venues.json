@@ -1,0 +1,77 @@
+[
+  {
+    "name": "Alan Gilbert Learning Commons - Ground Floor",
+    "city": "Manchester",
+    "max_capacity": 250
+  },
+  {
+    "name": "Alan Gilbert Learning Commons - Floor 1",
+    "city": "Manchester",
+    "max_capacity": 280
+  },
+  {
+    "name": "Alan Gilbert Learning Commons - Floor 2",
+    "city": "Manchester",
+    "max_capacity": 250
+  },
+  {
+    "name": "Main Library - Blue Area (Floors 1-3)",
+    "city": "Manchester",
+    "max_capacity": 300
+  },
+  {
+    "name": "Main Library - Green Area (Floors 1-3)",
+    "city": "Manchester",
+    "max_capacity": 300
+  },
+  {
+    "name": "Main Library - Purple Area (Floors 1-2)",
+    "city": "Manchester",
+    "max_capacity": 250
+  },
+  {
+    "name": "Nancy Rothwell Building - Core 1 Study Booths",
+    "city": "Manchester",
+    "max_capacity": 300
+  },
+  {
+    "name": "Nancy Rothwell Building - Core 3 Study Spaces",
+    "city": "Manchester",
+    "max_capacity": 300
+  },
+  {
+    "name": "Eddie Davies Library (AMBS) - Main Floor",
+    "city": "Manchester",
+    "max_capacity": 220
+  },
+  {
+    "name": "Stopford Student Hub and Library",
+    "city": "Manchester",
+    "max_capacity": 300
+  },
+  {
+    "name": "University Place (The Drum)",
+    "city": "Manchester",
+    "max_capacity": 250
+  },
+  {
+    "name": "SEED Student Support Hub and Library",
+    "city": "Manchester",
+    "max_capacity": 200
+  },
+  {
+    "name": "Ellen Wilkinson Commons",
+    "city": "Manchester",
+    "max_capacity": 180
+  },
+  {
+    "name": "The John Rylands Library (Historic Reading Room)",
+    "city": "Manchester",
+    "max_capacity": 120
+  },
+  {
+    "name": "Muriel Stott Study Area",
+    "city": "Manchester",
+    "max_capacity": 80
+  }
+]
