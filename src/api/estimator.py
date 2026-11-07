@@ -118,7 +118,8 @@ def estimate_occupancy(
     inputs = InputData(
         BluetoothData(devices),
         weather,
-        TimeData(now)
+        TimeData(now),
+        #normal_capacity=max(venue.max_capacity, 1),
     )
 
     try:
