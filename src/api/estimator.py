@@ -119,7 +119,7 @@ def estimate_occupancy(
         BluetoothData(devices),
         weather,
         TimeData(now),
-        normal_capacity=max(venue.max_capacity, 1),
+        #normal_capacity=max(venue.max_capacity, 1),
     )
 
     try:
