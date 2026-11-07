@@ -89,9 +89,9 @@ class InputData:
             self.devices.get_head_count() / self.normal_capacity,
         ]
 
-async def test_weather():
-    weather = await WeatherData.create("Raining")
+#async def test_weather():
+#    weather = await WeatherData.create("Manchester, UK")
 
-    print(weather.weather)
+#    print(weather.weather)
 
-asyncio.run(test_weather())
+#asyncio.run(test_weather())
