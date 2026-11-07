@@ -4,8 +4,8 @@ import time
 from bleak import BleakScanner
 
 # Configuration
-MIN_PRESENCE = 5
-MAX_GAP = 30
+MIN_PRESENCE = 20
+MAX_GAP = 5
 REMOVE_AFTER = MIN_PRESENCE
 RSSI_THRESHOLD = -70
 
