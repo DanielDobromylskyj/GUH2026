@@ -1,1 +1,1 @@
-from input_data import WeatherData, TimeData, BluetoothData, InputData
+from .input_data import WeatherData, TimeData, BluetoothData, InputData
