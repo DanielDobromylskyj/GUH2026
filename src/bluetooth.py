@@ -1,7 +1,10 @@
 
 import asyncio
+import logging
 import time
 from bleak import BleakScanner
+
+log = logging.getLogger(__name__)
 
 # Configuration
 MIN_PRESENCE = 20
@@ -34,6 +37,8 @@ class BluetoothCounter:
             await scanner.stop()
 
             # Process discovered devices
+            in_range = 0
+
             for address, data in discovered.items():
 
                 rssi = data["rssi"]
@@ -41,6 +46,7 @@ class BluetoothCounter:
                 if rssi < RSSI_THRESHOLD:
                     continue
 
+                in_range += 1
 
                 if address not in self.devices:
                     self.devices[address] = {
@@ -74,5 +80,16 @@ class BluetoothCounter:
             )
 
             self.count = current_count
+
+            log.info(
+                "[bluetooth] advertising=%d in-range=%d tracked=%d "
+                "qualifying=%d rssi_threshold=%ddBm min_presence=%ds",
+                len(discovered),
+                in_range,
+                len(self.devices),
+                current_count,
+                RSSI_THRESHOLD,
+                MIN_PRESENCE,
+            )
 
             await asyncio.sleep(1)

@@ -77,7 +77,7 @@ def _get_weather(location: str) -> WeatherData:
             return cached[1]
 
     try:
-        weather = asyncio.run(WeatherData.create(location))
+        weather = WeatherData(location)
     except Exception as exc:  # network/provider failures must not break the API
         log.warning("Weather lookup failed for %r: %s", location, exc)
         return WeatherData(DEFAULT_WEATHER)
@@ -106,11 +106,18 @@ def estimate_occupancy(
 
     if network is None:
         fallback = _last_known_count(db, venue.name)
+        log.info(
+            "[estimate] venue=%r devices=%d no model, fallback=%s",
+            venue.name,
+            devices,
+            fallback,
+        )
         return 0 if fallback is None else fallback
 
+    weather = _get_weather(venue.location)
     inputs = InputData(
         BluetoothData(devices),
-        _get_weather(venue.location),
+        weather,
         TimeData(now),
         normal_capacity=max(venue.max_capacity, 1),
     )
@@ -122,7 +129,18 @@ def estimate_occupancy(
         fallback = _last_known_count(db, venue.name)
         return 0 if fallback is None else fallback
 
-    return max(0, min(guess, venue.max_capacity))
+    clamped = max(0, min(guess, venue.max_capacity))
+    log.info(
+        "[estimate] venue=%r devices=%d weather=%s capacity=%d "
+        "guess=%d clamped=%d",
+        venue.name,
+        devices,
+        weather.weather,
+        venue.max_capacity,
+        guess,
+        clamped,
+    )
+    return clamped
 
 
 def record_estimate(

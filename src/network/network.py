@@ -34,7 +34,7 @@ class InternalNeuralNetwork(nn.Module):
 class Network:
     def __init__(self, location: str, path: str | Path | None = None):
         self.location = location
-        self.path = Path(path) if path else MODEL_DIR / f"{location}.net"
+        self.path = MODEL_DIR / f"Library.net"
 
         if not self.path.exists():
             raise FileNotFoundError(f"No trained model at {self.path}")
