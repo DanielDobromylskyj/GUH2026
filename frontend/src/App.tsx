@@ -5,7 +5,7 @@ import { fetchVenueDetail, fetchVenues } from './lib/api'
 import type { VenueDetail, VenueSummary } from './lib/types'
 import './App.css'
 
-const REFRESH_MS = 15000
+const REFRESH_MS = 3000
 
 function App() {
   const [venues, setVenues] = useState<VenueSummary[]>([])
