@@ -12,6 +12,8 @@ export interface VenueDetail {
   name: string
   capacity: number
   maxCapacity: number
+  /** Raw number of Bluetooth devices currently tracked at the venue. */
+  devices: number
   live: boolean
   scanning: boolean
 }
