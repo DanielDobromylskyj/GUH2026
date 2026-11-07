@@ -467,7 +467,7 @@ optimizer = torch.optim.Adam(
     lr=0.001
 )
 
-EPOCHS = 500
+EPOCHS = 1000
 
 for epoch in range(EPOCHS):
 
@@ -477,7 +477,7 @@ for epoch in range(EPOCHS):
 
     for inputs, targets in train_loader:
 
-        predictions = model(inputs)
+        predictions = model(inputs)  # NOQA - It sure is callable pycharm!
 
         loss = criterion(predictions, targets)
 
@@ -495,7 +495,7 @@ for epoch in range(EPOCHS):
             f"Loss: {average_loss:.6f}"
         )
 
-results = evaluate_model(model, test_loader)
+results = evaluate_model(model, test_loader)  # NOQA - The model does have those attrs pycharm
 plot_results(results)
 
-torch.save(model.state_dict(), "locations/Library.net")
+torch.save(model.state_dict(), "locations/Library2.net")
