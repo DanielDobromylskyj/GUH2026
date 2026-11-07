@@ -30,14 +30,14 @@
     "max_capacity": 250
   },
   {
-    "name": "Nancy Rothwell Building - Core 1 Study Booths",
+    "name": "Nancy Rothwell Building - Ground Floor Core 1 Study Booths",
     "city": "Manchester",
-    "max_capacity": 300
+    "max_capacity": 100
   },
   {
-    "name": "Nancy Rothwell Building - Core 3 Study Spaces",
+    "name": "Nancy Rothwell Building - Ground Floor Core 3 Study Spaces",
     "city": "Manchester",
-    "max_capacity": 300
+    "max_capacity": 100
   },
   {
     "name": "Eddie Davies Library (AMBS) - Main Floor",

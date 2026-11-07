@@ -1,20 +1,41 @@
 from datetime import datetime
 from typing import Literal, get_args
+import asyncio
+import python_weather
+from datetime import datetime
 
 weathers = Literal["Sunny", "Overcast", "Raining"]
 
 class WeatherData:
-    def __init__(self, value: weathers | None = None):
+    def __init__(self, weather: weathers):
+        self.weather = weather
+
+    @classmethod
+    async def create(cls, value: str | weathers):
         if value is None:
-            value = self.get_current_weather_at_location()
+            raise RuntimeError("Cannot supply neither a weather nor location")
 
-        self.weather = value
+        if value in get_args(weathers):
+            return cls(value)
 
-        if self.weather not in get_args(weathers):
-            raise ValueError(f"Invalid weather: {self.weather} not in {get_args(weathers)}")
+        weather = await cls.get_current_weather_at_location(value)
 
-    def get_current_weather_at_location(self) -> weathers:
-        raise NotImplementedError("Weather forcast fetching not implemented")
+        return cls(weather)
+
+    @staticmethod
+    async def get_current_weather_at_location(location: str) -> weathers:
+        async with python_weather.Client(unit=python_weather.METRIC) as weather_client:
+            weather = await weather_client.get(location)
+
+            forecast_chunk = datetime.now().hour // 3
+            weather_code = weather.daily_forecasts[0].hourly_forecasts[forecast_chunk].kind.value
+            print(weather_code)
+            if weather_code < 119:
+                return "Sunny"
+            elif weather_code <= 176:
+                return "Overcast"
+            else:
+                return "Raining"
 
     def get_weather_values(self) -> list[int]:
         options = get_args(weathers)
@@ -67,3 +88,10 @@ class InputData:
             *self.time.get_hour(),
             self.devices.get_head_count() / self.normal_capacity,
         ]
+
+#async def test_weather():
+#    weather = await WeatherData.create("Manchester, UK")
+
+#    print(weather.weather)
+
+#asyncio.run(test_weather())
