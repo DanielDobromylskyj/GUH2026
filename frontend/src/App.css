@@ -100,8 +100,7 @@
   gap: 8px;
 }
 
-.venue-list__empty,
-.rssi-list__empty {
+.venue-list__empty {
   font-size: 14px;
   opacity: 0.6;
   padding: 8px 2px;
@@ -134,7 +133,6 @@
 }
 
 .venue-card:focus-visible,
-.btn:focus-visible,
 .topbar__toggle:focus-visible {
   outline: 3px solid var(--mid);
   outline-offset: 2px;
@@ -224,12 +222,6 @@
   font-weight: 600;
 }
 
-.panel__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-
 /* ---------- cards ---------- */
 .card {
   background: var(--frame);
@@ -314,102 +306,103 @@
   opacity: 0.7;
 }
 
-/* ---------- scanner ---------- */
-.btn {
-  border: 0;
-  border-radius: 10px;
-  padding: 9px 16px;
-  font: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  background: var(--ink);
-  color: #fdfbf7;
-  cursor: pointer;
-}
-
-.btn--stop {
-  background: var(--busy);
-  color: #fff;
-}
-
-.scanner__stats {
-  display: flex;
-  gap: 28px;
-  margin: 16px 0 4px;
-}
-
-.scanner__num {
-  display: block;
-  font-family: var(--mono);
-  font-size: 30px;
-  font-weight: 600;
-  line-height: 1.1;
-}
-
-.scanner__cap {
+/* ---------- occupancy trend ---------- */
+.trend__meta {
   font-size: 12.5px;
-  opacity: 0.65;
+  opacity: 0.6;
 }
 
-.rssi-list {
-  list-style: none;
-  margin: 14px 0 0;
-  padding: 0;
+.trend__chart {
+  position: relative;
+  margin-top: 22px;
+  padding-left: 44px;
+  height: 300px;
+}
+
+.trend__grid {
+  position: absolute;
+  inset: 0 0 32px 44px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
 }
 
-.rssi-list li {
-  display: grid;
-  grid-template-columns: minmax(70px, 1fr) 2fr auto;
+.trend__gridline {
+  position: relative;
+  border-top: 1px dashed rgba(0, 56, 68, 0.14);
+}
+
+.trend__gridline em {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: -0.6em;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 11px;
+  opacity: 0.55;
+}
+
+.trend__bars {
+  position: absolute;
+  inset: 0 0 0 44px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.trend__bar {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.trend__fill {
+  border-radius: 6px 6px 0 0;
+  background: rgba(0, 56, 68, 0.18);
+  transition: height 0.45s ease;
+}
+
+.trend__hour {
+  height: 32px;
+  display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 13px;
-}
-
-.rssi-list__name {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  justify-content: center;
+  font-size: 11px;
+  opacity: 0.6;
   white-space: nowrap;
 }
 
-.rssi-list__bar {
-  height: 7px;
+.venue-card__live {
+  margin-left: 8px;
+  padding: 1px 6px;
   border-radius: 999px;
-  background: rgba(0, 56, 68, 0.12);
-  overflow: hidden;
+  background: var(--busy);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
 }
 
-.rssi-list__bar > span {
-  display: block;
-  height: 100%;
-  background: var(--ink);
-  transition: width 0.4s ease;
+.live-dot {
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--busy);
+  vertical-align: middle;
 }
 
-.rssi-list__val {
-  font-family: var(--mono);
-  opacity: 0.7;
-}
-
-.rssi-list__empty {
-  display: block !important;
-}
-
-/* ---------- chart placeholder ---------- */
-.chart-placeholder {
-  margin-top: 18px;
-  height: 120px;
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-}
-
-.chart-placeholder span {
-  flex: 1;
-  border-radius: 6px 6px 0 0;
-  background: rgba(0, 56, 68, 0.18);
+.live-dot--off {
+  color: rgba(0, 56, 68, 0.4);
 }
 
 /* ---------- responsive ---------- */

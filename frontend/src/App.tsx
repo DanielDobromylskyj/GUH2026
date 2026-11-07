@@ -24,18 +24,20 @@ function App() {
 
     const load = async () => {
       try {
-        const { venues: list, usingMockData } = await fetchVenues(
-          controller.signal,
+        const {venues: list, usingMockData} = await fetchVenues(
+            controller.signal,
         )
         setVenues(list)
         setOffline(usingMockData)
         setSelected((current) =>
-          current && list.some((v) => v.name === current)
-            ? current
-            : list.find((v) => v.name === 'Kilburn: LF1')?.name ??
-              list[0]?.name ??
-              null,
+            current && list.some((v) => v.name === current)
+                ? current
+                : list.find((v) => v.name === 'Kilburn: LF1')?.name ??
+                list[0]?.name ??
+                null,
         )
+      } catch {
+        /* aborted */
       } finally {
         if (!controller.signal.aborted) setVenuesLoading(false)
       }

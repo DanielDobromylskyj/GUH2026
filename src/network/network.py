@@ -1,8 +1,11 @@
-import os
+from pathlib import Path
+
 import torch
 import torch.nn as nn
 
 from .input_data import InputData
+
+MODEL_DIR = Path(__file__).resolve().parents[2] / "locations"
 
 
 class InternalNeuralNetwork(nn.Module):
@@ -29,9 +32,12 @@ class InternalNeuralNetwork(nn.Module):
 
 
 class Network:
-    def __init__(self, location: str):
+    def __init__(self, location: str, path: str | Path | None = None):
         self.location = location
-        self.path = f"locations/{location}.net"
+        self.path = Path(path) if path else MODEL_DIR / f"{location}.net"
+
+        if not self.path.exists():
+            raise FileNotFoundError(f"No trained model at {self.path}")
 
         device = torch.device(
             "cuda" if torch.cuda.is_available() else "cpu"
@@ -47,6 +53,8 @@ class Network:
             )
         )
 
+        self.net.eval()
+
 
     def guess(self, inputs: InputData) -> int:
         raw = torch.tensor(
@@ -54,9 +62,10 @@ class Network:
             dtype=torch.float32
         )
 
-        results = self.net.forward(raw)
+        with torch.no_grad():
+            results = self.net(raw)
 
-        return round(float(results[0] * inputs.normal_capacity))
+        return round(float(results[0]) * inputs.normal_capacity)
 
 
 

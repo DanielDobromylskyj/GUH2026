@@ -12,6 +12,7 @@ from flask import Blueprint, abort, jsonify, request
 from src.db import HOURS, Database, HistoricalEntry, Venue
 
 from .estimator import estimate_occupancy, record_estimate, status_from_ratio
+from .live import LIVE_VENUE, is_live_venue, live_counter
 
 venues_bp = Blueprint("venues", __name__, url_prefix="/api/venues")
 
@@ -23,13 +24,17 @@ def _ratio(count: int, max_capacity: int) -> float:
 
 
 def _venue_payload(venue: Venue, capacity: int) -> dict:
-    return {
+    payload = {
         "name": venue.name,
         "location": venue.location,
         "capacity": capacity,
         "max_capacity": venue.max_capacity,
         "status": status_from_ratio(_ratio(capacity, venue.max_capacity)),
+        "live": is_live_venue(venue.name),
     }
+    if payload["live"]:
+        payload["scanning"] = live_counter.available
+    return payload
 
 
 def _entry_payload(entry: HistoricalEntry) -> dict:
@@ -52,6 +57,8 @@ def _int_arg(name: str, default: int, minimum: int, maximum: int) -> int:
 
 
 def _require_venue(db: Database, venue_name: str) -> Venue:
+    if is_live_venue(venue_name):
+        return LIVE_VENUE
     venue = db.venues.get(venue_name)
     if venue is None:
         abort(404, description=f"Unknown venue: {venue_name!r}")
@@ -61,11 +68,21 @@ def _require_venue(db: Database, venue_name: str) -> Venue:
 @venues_bp.get("")
 @venues_bp.get("/")
 def list_venues():
-    """All venues with their latest known occupancy and status."""
+    """All venues with their latest known occupancy and status.
+
+    The LIVE venue is listed first and always re-estimated from the
+    current Bluetooth device count.
+    """
     today = Date.today()
     with Database() as db:
-        payload = []
+        live_capacity = estimate_occupancy(
+            db, LIVE_VENUE, devices=live_counter.count
+        )
+        payload = [_venue_payload(LIVE_VENUE, live_capacity)]
+
         for venue in db.venues.all():
+            if is_live_venue(venue.name):
+                continue
             readings = db.history.get_day(venue.name, today)
             capacity = readings[-1].data if readings else 0
             payload.append(_venue_payload(venue, capacity))
@@ -74,11 +91,18 @@ def list_venues():
 
 @venues_bp.get("/<venue_name>")
 def get_venue(venue_name: str):
-    """A fresh occupancy estimate for a single venue."""
-    devices = _int_arg("devices", default=0, minimum=0, maximum=10_000)
+    """A fresh occupancy estimate for a single venue.
 
+    For the LIVE venue the device count comes from the running Bluetooth
+    scanner; otherwise it is taken from the `devices` query parameter.
+    """
     with Database() as db:
         venue = _require_venue(db, venue_name)
+        devices = (
+            live_counter.count
+            if is_live_venue(venue.name)
+            else _int_arg("devices", default=0, minimum=0, maximum=10_000)
+        )
         capacity = estimate_occupancy(db, venue, devices=devices)
         record_estimate(db, venue.name, capacity)
         return jsonify(_venue_payload(venue, capacity))

@@ -29,7 +29,6 @@ class WeatherData:
 
             forecast_chunk = datetime.now().hour // 3
             weather_code = weather.daily_forecasts[0].hourly_forecasts[forecast_chunk].kind.value
-            print(weather_code)
             if weather_code < 119:
                 return "Sunny"
             elif weather_code <= 176:

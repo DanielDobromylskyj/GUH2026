@@ -30,7 +30,10 @@ export function VenueSidebar({ venues, selected, loading, onSelect }: Props) {
                 aria-current={isActive ? 'true' : undefined}
                 onClick={() => onSelect(venue.name)}
               >
-                <span className="venue-card__name">{venue.name}</span>
+                <span className="venue-card__name">
+                  {venue.name}
+                  {venue.live && <span className="venue-card__live">live</span>}
+                </span>
                 <span
                   className="venue-card__dot"
                   style={{ background: meta.colour }}

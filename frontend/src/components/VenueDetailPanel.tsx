@@ -1,6 +1,6 @@
 import type { VenueDetail } from '../lib/types'
 import { STATUS_META, statusFromRatio } from '../lib/types'
-import { BluetoothEstimator } from './BluetoothEstimator'
+import { OccupancyTrend } from './OccupancyTrend'
 
 interface Props {
   detail: VenueDetail | null
@@ -28,7 +28,21 @@ export function VenueDetailPanel({ detail, loading }: Props) {
       <header className="panel__head">
         <div>
           <p className="panel__eyebrow">Live occupancy</p>
-          <h1 className="panel__title">{detail.name}</h1>
+          <h1 className="panel__title">
+            {detail.name}
+            {detail.live && (
+              <span
+                className={`live-dot${detail.scanning ? '' : ' live-dot--off'}`}
+                title={
+                  detail.scanning
+                    ? 'Bluetooth scanner running'
+                    : 'Bluetooth scanner unavailable'
+                }
+              >
+                ● live
+              </span>
+            )}
+          </h1>
         </div>
         <span className="status-pill" style={{ background: meta.colour }}>
           {meta.label}
@@ -61,20 +75,7 @@ export function VenueDetailPanel({ detail, loading }: Props) {
         </p>
       </section>
 
-      <div className="panel__grid">
-        <BluetoothEstimator />
-        <section className="card card--future">
-          <h2 className="card__title">Occupancy trend</h2>
-          <p className="card__hint">
-            Reserved for charts and scanner logs.
-          </p>
-          <div className="chart-placeholder" aria-hidden="true">
-            {[32, 48, 26, 64, 55, 78, 41].map((h, i) => (
-              <span key={i} style={{ height: `${h}%` }} />
-            ))}
-          </div>
-        </section>
-      </div>
+      <OccupancyTrend venue={detail.name} />
     </main>
   )
 }
