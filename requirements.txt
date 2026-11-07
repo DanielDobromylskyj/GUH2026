@@ -1,0 +1,4 @@
+bleak>=0.22
+flask>=3.0
+python-weather>=2.2
+torch>=2.0

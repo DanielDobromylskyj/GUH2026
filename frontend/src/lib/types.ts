@@ -1,12 +1,12 @@
 export type VenueStatus = 'busy' | 'mid' | 'empty'
 
-/** Shape returned by `GET /venues`. */
+/** Shape returned by `GET /api/venues`. */
 export interface VenueSummary {
   name: string
   status: VenueStatus
 }
 
-/** Shape returned by `GET /venues/{name}`. */
+/** Shape returned by `GET /api/venues/{name}`. */
 export interface VenueDetail {
   name: string
   capacity: number
