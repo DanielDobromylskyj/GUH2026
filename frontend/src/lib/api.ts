@@ -11,11 +11,11 @@ const API_BASE = (import.meta.env.VITE_API_BASE ?? '/api').replace(/\/$/, '')
 
 /** Used when the backend is unreachable so the UI stays demoable. */
 const MOCK_VENUES: VenueDetail[] = [
-  { name: 'kdfasdf', capacity: 18, maxCapacity: 60, live: false, scanning: false },
-  { name: 'Kilburn: LF1', capacity: 43, maxCapacity: 440, live: false, scanning: false },
-  { name: 'lorum', capacity: 96, maxCapacity: 120, live: false, scanning: false },
-  { name: 'ipsum', capacity: 55, maxCapacity: 100, live: false, scanning: false },
-  { name: 'delmut', capacity: 7, maxCapacity: 250, live: false, scanning: false },
+  { name: 'kdfasdf', capacity: 18, maxCapacity: 60, devices: 12, live: false, scanning: false },
+  { name: 'Kilburn: LF1', capacity: 43, maxCapacity: 440, devices: 29, live: false, scanning: false },
+  { name: 'lorum', capacity: 96, maxCapacity: 120, devices: 64, live: false, scanning: false },
+  { name: 'ipsum', capacity: 55, maxCapacity: 100, devices: 37, live: false, scanning: false },
+  { name: 'delmut', capacity: 7, maxCapacity: 250, devices: 4, live: false, scanning: false },
 ]
 
 async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
@@ -50,10 +50,12 @@ function normaliseDetail(name: string, payload: unknown): VenueDetail {
   const maxCapacity = Number(
     obj.maxCapacity ?? obj.max_capacity ?? obj.max ?? obj.limit ?? 0,
   )
+  const devices = Number(obj.devices ?? obj.device_count ?? 0)
   return {
     name: String(obj.name ?? name),
     capacity: Number.isFinite(capacity) ? capacity : 0,
     maxCapacity: Number.isFinite(maxCapacity) ? maxCapacity : 0,
+    devices: Number.isFinite(devices) ? devices : 0,
     live: Boolean(obj.live),
     scanning: Boolean(obj.scanning),
   }
@@ -100,7 +102,14 @@ export async function fetchVenueDetail(
     if (signal?.aborted) throw err
     const mock = MOCK_VENUES.find((v) => v.name === name)
     return (
-      mock ?? { name, capacity: 0, maxCapacity: 0, live: false, scanning: false }
+      mock ?? {
+        name,
+        capacity: 0,
+        maxCapacity: 0,
+        devices: 0,
+        live: false,
+        scanning: false,
+      }
     )
   }
 }

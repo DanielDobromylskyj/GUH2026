@@ -69,10 +69,18 @@ export function VenueDetailPanel({ detail, loading }: Props) {
             style={{ width: `${ratio * 100}%`, background: meta.colour }}
           />
         </div>
-        <p className="capacity__hint">
-          {Math.round(ratio * 100)}% full ·{' '}
-          {Math.max(detail.maxCapacity - detail.capacity, 0)} spaces left
-        </p>
+        <div className="capacity__footer">
+          <p className="capacity__hint">
+            {Math.round(ratio * 100)}% full ·{' '}
+            {Math.max(detail.maxCapacity - detail.capacity, 0)} spaces left
+          </p>
+          <p
+            className="capacity__devices"
+            title="Raw number of tracked Bluetooth devices"
+          >
+            {detail.devices} device{detail.devices === 1 ? '' : 's'} tracked
+          </p>
+        </div>
       </section>
 
       <OccupancyTrend venue={detail.name} />

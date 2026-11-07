@@ -23,7 +23,7 @@ def _ratio(count: int, max_capacity: int) -> float:
     return count / max_capacity if max_capacity > 0 else 0.0
 
 
-def _venue_payload(venue: Venue, capacity: int) -> dict:
+def _venue_payload(venue: Venue, capacity: int, devices: int | None = None) -> dict:
     payload = {
         "name": venue.name,
         "location": venue.location,
@@ -32,6 +32,8 @@ def _venue_payload(venue: Venue, capacity: int) -> dict:
         "status": status_from_ratio(_ratio(capacity, venue.max_capacity)),
         "live": is_live_venue(venue.name),
     }
+    if devices is not None:
+        payload["devices"] = devices
     if payload["live"]:
         payload["scanning"] = live_counter.available
     return payload
@@ -93,19 +95,25 @@ def list_venues():
 def get_venue(venue_name: str):
     """A fresh occupancy estimate for a single venue.
 
-    For the LIVE venue the device count comes from the running Bluetooth
-    scanner; otherwise it is taken from the `devices` query parameter.
+    The device count comes from the running Bluetooth scanner, unless the
+    `devices` query parameter overrides it for a non-LIVE venue. It is
+    echoed back in the payload as `devices`.
     """
     with Database() as db:
         venue = _require_venue(db, venue_name)
         devices = (
             live_counter.count
             if is_live_venue(venue.name)
-            else _int_arg("devices", default=0, minimum=0, maximum=10_000)
+            else _int_arg(
+                "devices",
+                default=live_counter.count,
+                minimum=0,
+                maximum=10_000,
+            )
         )
         capacity = estimate_occupancy(db, venue, devices=devices)
         record_estimate(db, venue.name, capacity)
-        return jsonify(_venue_payload(venue, capacity))
+        return jsonify(_venue_payload(venue, capacity, devices=devices))
 
 
 @venues_bp.get("/<venue_name>/history")
