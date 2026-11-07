@@ -6,30 +6,36 @@ from datetime import datetime
 
 weathers = Literal["Sunny", "Overcast", "Raining"]
 
-class WeatherData:
-    def __init__(self, weather: weathers):
-        self.weather = weather
 
-    @classmethod
-    async def create(cls, value: str | weathers):
+class WeatherData:
+    def __init__(self, value: str | weathers | None = None):
+        self.weather: weathers | None = None
+
         if value is None:
-            raise RuntimeError("Cannot supply neither a weather nor location")
+            return
 
         if value in get_args(weathers):
-            return cls(value)
-
-        weather = await cls.get_current_weather_at_location(value)
-
-        return cls(weather)
+            self.weather = value
+        else:
+            self.weather = asyncio.run(
+                self.get_current_weather_at_location(value)
+            )
 
     @staticmethod
     async def get_current_weather_at_location(location: str) -> weathers:
-        async with python_weather.Client(unit=python_weather.METRIC) as weather_client:
+        async with python_weather.Client(
+            unit=python_weather.METRIC
+        ) as weather_client:
+
             weather = await weather_client.get(location)
 
             forecast_chunk = datetime.now().hour // 3
-            weather_code = weather.daily_forecasts[0].hourly_forecasts[forecast_chunk].kind.value
-            print(weather_code)
+            weather_code = (
+                weather.daily_forecasts[0]
+                .hourly_forecasts[forecast_chunk]
+                .kind.value
+            )
+
             if weather_code < 119:
                 return "Sunny"
             elif weather_code <= 176:
@@ -39,6 +45,10 @@ class WeatherData:
 
     def get_weather_values(self) -> list[int]:
         options = get_args(weathers)
+
+        if self.weather is None:
+            return [0] * len(options)
+
         current = options.index(self.weather)
 
         return [
@@ -95,3 +105,5 @@ class InputData:
 #    print(weather.weather)
 
 #asyncio.run(test_weather())
+test= WeatherData("Manchester, UK")
+print(test.weather)
