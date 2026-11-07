@@ -10,11 +10,12 @@ log = logging.getLogger(__name__)
 MIN_PRESENCE = 20
 MAX_GAP = 5
 REMOVE_AFTER = MIN_PRESENCE
-RSSI_THRESHOLD = -70
+RSSI_THRESHOLD = -80
 
 class BluetoothCounter:
     def __init__(self):
         self.count = 0
+        self.history = [0]*10
         self.devices = {}
 
     async def scan_loop(self):
@@ -79,7 +80,8 @@ class BluetoothCounter:
                 )
             )
 
-            self.count = current_count
+            self.history = self.history[1:]+[in_range]
+            self.count = sum(self.history)//10
 
             log.info(
                 "[bluetooth] advertising=%d in-range=%d tracked=%d "
