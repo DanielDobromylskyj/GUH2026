@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 MIN_PRESENCE = 20
 MAX_GAP = 5
 REMOVE_AFTER = MIN_PRESENCE
-RSSI_THRESHOLD = -75
+RSSI_THRESHOLD = -80
 
 class BluetoothCounter:
     def __init__(self):
