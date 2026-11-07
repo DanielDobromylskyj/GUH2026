@@ -1,7 +1,7 @@
 import type { VenueDetail, VenueStatus, VenueSummary } from './types'
 import { statusFromRatio } from './types'
 
-const API_BASE = (import.meta.env.VITE_API_BASE ?? '').replace(/\/$/, '')
+const API_BASE = (import.meta.env.VITE_API_BASE ?? '/api').replace(/\/$/, '')
 
 /** Used when the backend is unreachable so the UI stays demoable. */
 const MOCK_VENUES: VenueDetail[] = [
